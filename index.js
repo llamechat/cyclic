@@ -11,9 +11,11 @@ let server = http.createServer((request, response) => {
 
 server.on("listening", () => {
 	console.log("cyclic launched!");
+	console.log(`listening at port ${server.address().port} of ${server.address().address}`);
+	console.log("---");
 });
 
-server.listen(8080);
+server.listen(80);
 
 function time() {
 	let d = new Date();
