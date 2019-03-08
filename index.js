@@ -10,7 +10,7 @@ let server = http.createServer((request, response) => {
 		response.writeHead(data.code, { "Content-Type": data.type });
 		response.end(data.content);
 
-		console.log(`${time()} | responed with ${data.code}`)
+		console.log(`${time()} | responed with a ${data.code}`);
 	}).catch((e) => response.end(e));
 });
 
