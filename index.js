@@ -7,7 +7,7 @@ let server = http.createServer((request, response) => {
 	let path = request.url.split("/").filter(str => str.length != 0);
 
 	util.getPage(path).then((data) => {
-		response.writeHead(data.code, { "Content-Type": data.type });
+		response.writeHead(data.code, { "Content-Type": data.type, "Connection": "close" });
 		response.end(data.content);
 
 		console.log(`${time()} | responed with a ${data.code}`);

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const api = require("./api");
 
 /**
  * @param {string[]} path
@@ -14,6 +15,10 @@ function getPage(path) {
 				getFile(`./src/${path[1]}.css`)
 					.then((data) => resolve({ code: 200, type: "text/css", content: data }))
 					.catch((e) => reject({ code: 404, type: "text/html", content: e }));
+			} break;
+
+			case "api": {
+				resolve({ code: 200, type: "application/json", content: JSON.stringify(api.getEndpoints()) });
 			} break;
 
 			default: {
