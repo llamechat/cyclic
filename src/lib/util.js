@@ -5,7 +5,7 @@ const api = require("./api");
  * @param {string[]} path
  */
 function getPage(path) {
-	return new Promise((resolve, reject) => {	
+	return new Promise((resolve, reject) => {
 		if (path.length == 0) {
 			getFile("./src/index.xml")
 				.then((data) => resolve({ code: 200, type: "text/html", content: data }))

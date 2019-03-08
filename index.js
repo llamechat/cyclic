@@ -2,7 +2,12 @@ const http = require("http");
 const util = require("./src/lib/util");
 
 let server = http.createServer((request, response) => {
-	console.log(`${time()} | request from ${request.socket.address().address}`);
+	let address;
+
+	if (request.rawHeaders.includes("DNT")) address = "anon"
+	else address = request.socket.address().address;
+
+	console.log(`${time()} | request from ${address}`);
 
 	let path = request.url.split("/").filter(str => str.length != 0);
 
