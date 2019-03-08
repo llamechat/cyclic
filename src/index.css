@@ -4,12 +4,43 @@ html, body {
 	padding: 0;
 	margin: 0;
 	background: #212126;
-	color: #ddd;
+	color: #ccc;
 	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 	font-size: 1em;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6 {
 	margin: 0;
-	font-weight: normal;
+	color: #ddd;
+}
+
+p {
+	margin: 1em 0;
+}
+
+a {
+	color: #999 !important;
+	text-decoration: none;
+	display: block;
+}
+
+.splash {
+	width: 25%;
+	min-width: 250px;
+	padding: 2em;
+}
+
+.splash .links {
+	padding: 0 1em;
+}
+
+.splash .links a::before {
+	content: ">";
+	padding-right: 0.2em;
+	display: inline-block;
+	transition: padding-right 0.2s;
+}
+
+.splash .links a:hover::before {
+	padding-right: 1em;
 }
