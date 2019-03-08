@@ -4,18 +4,14 @@ const fs = require("fs");
  * @param {string[]} path
  */
 function getPage(path) {
-	return new Promise((resolve, reject) => {
-		let type = "text/html";
-		let content = "";
-	
+	return new Promise((resolve, reject) => {	
 		if (path.length == 0) {
-			getHtml("./src/index.xml").then((data) => {
-				content = data;
-				resolve({ type: type, content: content });
-			}).catch((e) => reject({ type: "text/html", content: e }));
+			getHtml("./src/index.xml")
+				.then((data) => resolve({ code: 200, type: "text/html", content: data }))
+				.catch((e) => reject({ code: 500, type: "text/html", content: e }));
 		} else switch (path[0]) {
 			default: {
-				content = "404";
+				resolve({ code: 404, type: "text/html", content: "404" })
 			}
 		}
 	});

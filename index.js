@@ -7,8 +7,10 @@ let server = http.createServer((request, response) => {
 	let path = request.url.split("/").filter(str => str.length != 0);
 
 	util.getPage(path).then((data) => {
-		response.writeHead(200, { "Content-Type": data.type });
+		response.writeHead(data.code, { "Content-Type": data.type });
 		response.end(data.content);
+
+		console.log(`${time()} | responed with ${data.code}`)
 	}).catch((e) => response.end(e));
 });
 
