@@ -18,7 +18,17 @@ function getPage(path) {
 			} break;
 
 			case "api": {
-				resolve({ code: 200, type: "application/json", content: JSON.stringify(api.getEndpoints()) });
+				let result;
+
+				if (path.length == 1) {
+					result = api.getEndpoints();
+				} else {
+					path.shift();
+
+					result = api.callEndpoint(path, {});
+				}
+
+				resolve({ code: 200, type: "application/json", content: JSON.stringify(result) });
 			} break;
 
 			default: {
