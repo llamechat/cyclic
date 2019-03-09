@@ -1,3 +1,5 @@
+const qs = require("querystring");
+
 class Channel {
 	constructor(name, owner) {
 		this.name = name;
@@ -31,11 +33,21 @@ let data = {
 }
 
 let endpoints = {
-	"channels": (e) => {
+	"channels": (p, e) => {
 		let publics = data.channels.filter(channel => channel.options.public);
 		let names = publics.map(channel => channel.name);
 
 		return names;
+	},
+	"channels/*": (p, e) => {
+		let channel;
+
+		data.channels.forEach((c) => {
+			if (!channel && p[1] == c.name)
+				channel = c;
+		});
+
+		return channel || generateError(404, "Channel Does Not Exist");
 	},
 }
 
@@ -53,7 +65,7 @@ function callEndpoint(path, parameters) {
 
 	for (let i = 0; i < eps.length; i++) {
 		if (equalArrays(path, eps[i].split("/"))) {
-			return endpoints[eps[i]](parameters);
+			return endpoints[eps[i]](path, parameters);
 		}
 	}
 
