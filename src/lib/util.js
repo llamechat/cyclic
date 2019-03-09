@@ -4,7 +4,7 @@ const api = require("./api");
 /**
  * @param {string[]} path
  */
-function getPage(path) {
+function getPage(path, parameters) {
 	return new Promise((resolve, reject) => {
 		if (path.length == 0) {
 			getFile("./src/index.xml")
@@ -25,7 +25,7 @@ function getPage(path) {
 				} else {
 					path.shift();
 
-					result = api.callEndpoint(path, {});
+					result = api.callEndpoint(path, parameters);
 				}
 
 				resolve({ code: 200, type: "application/json", content: JSON.stringify(result) });

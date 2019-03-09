@@ -14,5 +14,8 @@
 	"bugs": {
 		"url": "https://github.com/llamechat/cyclic/issues"
 	},
-	"homepage": "https://github.com/llamechat/cyclic#readme"
+	"homepage": "https://github.com/llamechat/cyclic#readme",
+	"dependencies": {
+		"querystring": "^0.2.0"
+	}
 }

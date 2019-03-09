@@ -1,23 +1,42 @@
 class Channel {
 	constructor(name, owner) {
 		this.name = name;
+
 		this.owner = owner;
+		this.members = [owner]
+
+		this.options = {
+			public: false,
+		}
 	}
 }
 
 class Account {
-	constructor(name) {
+	constructor(name, password, email) {
 		this.name = name;
+		this.password = password;
+		this.email = email;
+
+		this.options = {
+			color: "dddddd",
+		}
 	}
 }
 
 let data = {
-	"channels": [new Channel("rainmeter", "bupkis"), new Channel("bupkis", "rainmeter")],
+	"channels": [
+		new Channel("testchannel", undefined),
+	],
 	"accounts": [],
 }
 
 let endpoints = {
-	"channels": (e) => { return data.channels },
+	"channels": (e) => {
+		let publics = data.channels.filter(channel => channel.options.public);
+		let names = publics.map(channel => channel.name);
+
+		return names;
+	},
 }
 
 function getEndpoints() {
@@ -38,7 +57,11 @@ function callEndpoint(path, parameters) {
 		}
 	}
 
-	return { "error": { "code": 404, "message": "Invalid Api Endpoint Provided" } }
+	return generateError(404, "Invalid Api Endpoint Provided");
+}
+
+function generateError(code, message) {
+	return { "error": { "code": code, "message": message } }
 }
 
 module.exports = exports = {
@@ -55,8 +78,9 @@ function equalArrays(a, b) {
 		return false;
 
 	for (let i = 0; i < a.length; i++) {
-		if (a[i] != b[i])
+		if (a[i] != b[i] && a[i] != "*" && b[i] != "*") {
 			return false;
+		}
 	}
 
 	return true;

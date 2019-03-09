@@ -2,16 +2,15 @@ const http = require("http");
 const util = require("./src/lib/util");
 
 let server = http.createServer((request, response) => {
-	let address;
-
-	if (request.rawHeaders.includes("DNT")) address = "anon"
-	else address = request.socket.address().address;
+	let address =
+		request.rawHeaders.includes("DNT") ?
+			"anon" : request.socket.address().address;
 
 	console.log(`${time()} | request from ${address}`);
 
 	let path = request.url.split("/").filter(str => str.length != 0);
 
-	util.getPage(path).then((data) => {
+	util.getPage(path, request).then((data) => {
 		response.writeHead(data.code, { "Content-Type": data.type, "Connection": "close" });
 		response.end(data.content);
 
