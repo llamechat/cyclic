@@ -49,6 +49,14 @@ let endpoints = {
 
 		return channel || generateError(404, "Channel Does Not Exist");
 	},
+	"channels/*/send": (p, e) => {},
+	"channels/*/delete": (p, e) => {},
+	"channels/*/create": (p, e) => {},
+	"accounts": (p, e) => {},
+	"accounts/*": (p, e) => {},
+	"accounts/*/authenticate": (p, e) => {},
+	"accounts/*/delete": (p, e) => {},
+	"accounts/*/create": (p, e) => {},
 }
 
 function getEndpoints() {
