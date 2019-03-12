@@ -12,7 +12,7 @@
 		<h1>llamechat</h1>
 		<p>Hello, this is the default splash screen for a llamechat cyclic server, see the following links for more information;</p>
 		<div class="links">
-			<a href="https://llamechat.github.io/docs">view documentation</a>
+			<a href="https://llamechat.github.io/">view documentation</a>
 			<a href="/api/">view api</a>
 		</div>
 	</div>
