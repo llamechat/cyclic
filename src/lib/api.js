@@ -5,6 +5,21 @@ let data = {
 	"accounts": [],
 }
 
+class Message {
+	constructor(content, sender, options = {}) {
+		this.content = content;
+		this.sender = sender;
+
+		{ // set message timestamp
+			let d = new Date();
+			this.date = `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+			this.time = `${d.getHours() + 1}:${d.getMinutes() + 1}:${d.getSeconds() + 1}`;
+		}
+
+		this.options = {}
+	}
+}
+
 class Channel {
 	/**
 	 * creates a new channel
@@ -16,13 +31,15 @@ class Channel {
 		this.name = name;
 
 		this.owner = owner.name;
-		this.members = [owner.name];
+		this.members = [];
+		this.messages = [];
 
 		this.options = {
 			public: false,
 		}
 
 		data.channels.push(this);
+		owner.joinChannel(this);
 	}
 }
 
@@ -37,11 +54,22 @@ class Account {
 		this.name = name;
 		this.password = password;
 
+		this.channels = [];
+
 		this.options = {
 			color: "dddddd",
 		}
 
 		data.accounts.push(this);
+	}
+
+	/**
+	 * @param {Channel} channel
+	 * @memberof Account
+	 */
+	joinChannel(channel) {
+		this.channels.push(channel.name);
+		channel.members.push(this.name);
 	}
 }
 

@@ -29,5 +29,5 @@ server.listen(config.port);
 
 function time() {
 	let d = new Date();
-	return `${d.getHours() + 1}:${d.getMinutes() + 1}:${d.getSeconds() + 1}`
+	return `${d.getHours() + 1}:${d.getMinutes() + 1}:${d.getSeconds() + 1}`;
 }
