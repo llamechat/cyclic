@@ -7,7 +7,10 @@ let server = http.createServer((request, response) => {
 		request.rawHeaders.includes("DNT") ?
 			"anon" : request.socket.address().address;
 
-	console.log(`${time()} | request from ${address}`);
+	let timestamp = time();
+
+	console.log(`${timestamp} | request from ${address}`);
+	console.log(`${" ".repeat(timestamp.length)}   for resource ${request.url}`)
 
 	let path = request.url.split("/").filter(str => str.length != 0);
 
