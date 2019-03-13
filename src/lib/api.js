@@ -1,5 +1,3 @@
-const qs = require("querystring");
-
 class Channel {
 	constructor(name, owner) {
 		this.name = name;
@@ -17,7 +15,6 @@ class Account {
 	constructor(name, password, email) {
 		this.name = name;
 		this.password = password;
-		this.email = email;
 
 		this.options = {
 			color: "dddddd",
