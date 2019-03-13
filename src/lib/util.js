@@ -12,9 +12,25 @@ function getPage(path, parameters) {
 				.then((data) => resolve({ code: 200, type: "text/html", content: data }))
 				.catch((e) => reject({ code: 404, type: "text/html", content: e }));
 		} else switch (path[0]) {
+			case "client": {
+				if (path.length == 1) {
+					getFile(`./src/client.xml`)
+						.then((data) => resolve({ code: 200, type: "text/html", content: data }))
+						.catch((e) => reject({ code: 404, type: "text/html", content: e }));
+				} else {
+					resolve({ code: 404, type: "text/html", content: "404" });
+				}
+			} break;
+
 			case "css": {
 				getFile(`./src/${path[1]}.css`)
 					.then((data) => resolve({ code: 200, type: "text/css", content: data }))
+					.catch((e) => reject({ code: 404, type: "text/html", content: e }));
+			} break;
+
+			case "js": {
+				getFile(`./src/${path[1]}.js`)
+					.then((data) => resolve({ code: 200, type: "text/javascript", content: data }))
 					.catch((e) => reject({ code: 404, type: "text/html", content: e }));
 			} break;
 

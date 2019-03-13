@@ -1,33 +1,55 @@
+const config = require("../../config");
+
+let data = {
+	"channels": [],
+	"accounts": [],
+}
+
 class Channel {
+	/**
+	 * creates a new channel
+	 * @param {string} name
+	 * @param {Account} owner
+	 * @memberof Channel
+	 */
 	constructor(name, owner) {
 		this.name = name;
 
-		this.owner = owner;
-		this.members = [owner]
+		this.owner = owner.name;
+		this.members = [owner.name];
 
 		this.options = {
 			public: false,
 		}
+
+		data.channels.push(this);
 	}
 }
 
 class Account {
-	constructor(name, password, email) {
+	/**
+	 * creates a new account
+	 * @param {string} name
+	 * @param {string} password
+	 * @memberof Account
+	 */
+	constructor(name, password) {
 		this.name = name;
 		this.password = password;
 
 		this.options = {
 			color: "dddddd",
 		}
+
+		data.accounts.push(this);
 	}
 }
 
-let data = {
-	"channels": [
-		new Channel("testchannel", undefined),
-	],
-	"accounts": [],
-}
+const admin = new Account(config.account.username, config.account.password);
+
+let testAccount = new Account("testaccount", "despacito")
+let testChannel = new Channel("testchannel", testAccount);
+testChannel.options.public = true;
 
 let endpoints = {
 	"channels": (p, e) => {
@@ -47,20 +69,20 @@ let endpoints = {
 		return channel || generateError(404, "Channel Does Not Exist");
 	},
 	"channels/*/send": (p, e) => {},
-	"channels/*/delete": (p, e) => {},
-	"channels/*/create": (p, e) => {},
+	"channels/delete": (p, e) => {},
+	"channels/create": (p, e) => {},
 	"accounts": (p, e) => {},
 	"accounts/*": (p, e) => {},
-	"accounts/*/authenticate": (p, e) => {},
-	"accounts/*/delete": (p, e) => {},
-	"accounts/*/create": (p, e) => {},
+	"accounts/authenticate": (p, e) => {},
+	"accounts/delete": (p, e) => {},
+	"accounts/create": (p, e) => {},
 }
 
 function getEndpoints() {
 	let eps = [];
 
 	Object.keys(endpoints).forEach((e) =>
-		eps.push(`/${e}/`));
+		eps.push(`/${e.replace(/\*/g, "any")}/`));
 
 	return eps;
 }

@@ -1,5 +1,6 @@
 const http = require("http");
 const util = require("./src/lib/util");
+const config = require("./config.json");
 
 let server = http.createServer((request, response) => {
 	let address =
@@ -24,7 +25,7 @@ server.on("listening", () => {
 	console.log("---");
 });
 
-server.listen(8080);
+server.listen(config.port);
 
 function time() {
 	let d = new Date();
