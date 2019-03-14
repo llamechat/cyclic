@@ -6,9 +6,16 @@ let data = {
 }
 
 class Message {
+	/**
+	 * creates a new message to be sent
+	 * @param {string} content
+	 * @param {Account} sender
+	 * @param {object} [options={}]
+	 * @memberof Message
+	 */
 	constructor(content, sender, options = {}) {
 		this.content = content;
-		this.sender = sender;
+		this.sender = sender.name;
 
 		{ // set message timestamp
 			let d = new Date();
@@ -71,13 +78,44 @@ class Account {
 		this.channels.push(channel.name);
 		channel.members.push(this.name);
 	}
+
+	/**
+	 * @param {string} channel
+	 * @param {string} message
+	 * @param {object} [options={}]
+	 * @memberof Account
+	 */
+	send(channel, message, options = {}) {
+		/** @type {Channel} */
+		let x;
+
+		this.channels.forEach((c) => {
+			if (c == channel) {
+				data.channels.forEach((c) => {
+					if (c.name == channel)
+						x = c;
+				})
+			}
+		});
+
+		if (x) {
+			x.messages.push(new Message(message, this, options));
+		} else {
+			throw new Error("404 Invalid Channel");
+		}
+	}
 }
 
 const admin = new Account(config.account.username, config.account.password);
 
 let testAccount = new Account("testaccount", "despacito")
 let testChannel = new Channel("testchannel", testAccount);
+
 testChannel.options.public = true;
+
+testAccount.send("testchannel", "test");
+testAccount.send("testchannel", "hello world");
+testAccount.send("testchannel", "h");
 
 let endpoints = {
 	"channels": (p, e) => {

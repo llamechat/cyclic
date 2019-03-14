@@ -10,7 +10,7 @@
 </head>
 <body>
 	<label>channel  <input placeholder="x" id="channel"></label>
-	<label>username <input placeholder="x" id="user"></label>
+	<label>username <input placeholder="x" id="username"></label>
 	<label>password <input placeholder="x" id="password"></label>
 	<textarea placeholder="message" id="message"></textarea>
 	<label><input type="button" value="send" id="send"></label>
