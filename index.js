@@ -10,25 +10,30 @@ let server = http.createServer((request, response) => {
 		data += chunk;
 
 		if (data > 1e6)
-			request.destroy("Too Much Information.");
+			request.destroy("413; Too Much Information.");
 	});
 
 	request.on("end", () => {
-		let address =
-			request.rawHeaders.includes("DNT") ?
-				"anon" : request.socket.address().address;
-	
-		let timestamp = time();
-	
-		console.log(`${timestamp} | request from ${address}`);
-		console.log(`${" ".repeat(timestamp.length)}   for resource ${request.url}`)
-	
+		{ // logging
+			let address =
+				request.rawHeaders.includes("DNT") ?
+					"anon" : request.socket.address().address;
+
+			let timestamp = time();
+
+			console.log(`${timestamp} | request from ${address}`);
+			console.log(`${" ".repeat(timestamp.length)}   for resource ${request.url}`);
+		}
+
+		request.post = qs.parse(data);
+		console.log(request.post);
+
 		let path = request.url.split("/").filter(str => str.length != 0);
-	
+
 		util.getPage(path, request).then((data) => {
 			response.writeHead(data.code, { "Content-Type": data.type, "Connection": "close" });
 			response.end(data.content);
-	
+
 			console.log(`${time()} | responed with a ${data.code}`);
 		}).catch((e) => response.end(e));
 	});
