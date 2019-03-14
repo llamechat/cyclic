@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link rel="stylesheet" type="text/css" href="/css/client">
-	<script src="/js/client"></script>
+	<script defer src="/js/client"></script>
 	<title>client | llamechat cyclic server</title>
 </head>
 <body>

@@ -1,39 +1,53 @@
-function get(url, callback, headers = {}){
-	var request = new XMLHttpRequest();
+let channelField = document.getElementById("channel");
+let usernameField = document.getElementById("username");
+let passwordField = document.getElementById("password");
+let messageField = document.getElementById("message");
+let sendButton = document.getElementById("send");
+let display = document.getElementById("display");
 
-	request.addEventListener("readystatechange", () => { 
-		if (request.readyState == 4 && request.status == 200)
-			callback(request.responseText);
+sendButton.addEventListener("click", () => {
+	post(`/api/channels/${channelField.value}/send/`, {
+		username: usernameField.value,
+		password: passwordField.value,
+		message: messageField.value,
+	})
+	.then((data) => {
+		display.innerText = JSON.stringify(JSON.parse(data), undefined, "\t");
+	}).catch(console.error);
+});
+
+function get(url){
+	return new Promise((resolve, reject) => {
+		fetch(url, {
+			method: "GET",
+		})	.then((response) =>
+				response.text()
+					.then(resolve)
+					.catch(reject))
+			.catch(reject);
 	});
-
-	request.open("GET", url, true);
-
-	if (headers) {
-		for (header in headers){
-			request.setRequestHeader(header, headers[header]);
-		}
-	}
-
-	request.send();
 }
 
-function post(url, callback, headers = {}){
-	var request = new XMLHttpRequest();
+function post(url, headers = {}) {
+	let data = "";
 
-	request.addEventListener("readystatechange", () => { 
-		if (request.readyState == 4 && request.status == 200)
-			callback(request.responseText);
+	Object.keys(headers).forEach((header, i) => {
+		if (i != 0)
+			data += "&";
+
+		data += `${header}=${headers[header]}`;
 	});
 
-	request.open("POST", url, true);
-
-	if (headers) {
-		for (header in headers){
-			request.setRequestHeader(header, headers[header]);
-		}
-	}
-
-	request.send();
+	return new Promise((resolve, reject) => {
+		fetch(url, {
+			method: "POST",
+			body: data,
+		})	.then((response) =>
+				response.text()
+					.then(resolve)
+					.catch(reject))
+			.catch(reject);
+	});
 }
 
 /* thank you yamachat web client for existing so I can steal yo shit
