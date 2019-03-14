@@ -144,7 +144,24 @@ let endpoints = {
 
 		return channel.messages || generateError(404, "Channel Does Not Exist");
 	},
-	"channels/*/send": (p, e) => {},
+	"channels/*/send": (p, e) => {
+		let account;
+
+		data.accounts.forEach((a) => {
+			if (!account && e.post.username == a.name)
+				account = a;
+		});
+
+		if (account) {
+			if (account.password == e.post.passsord) {
+				account.send(p[1], e.post.message);
+			} else {
+				return generateError(401, "Invalid Account Password");
+			}
+		} else {
+			return generateError(404, "Account Does Not Exist");
+		}
+	},
 	"channels/delete": (p, e) => {},
 	"channels/create": (p, e) => {},
 	"accounts": (p, e) => {},
