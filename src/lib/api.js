@@ -96,6 +96,16 @@ let endpoints = {
 
 		return channel || generateError(404, "Channel Does Not Exist");
 	},
+	"channels/*/read": (p, e) => {
+		let channel;
+
+		data.channels.forEach((c) => {
+			if (!channel && p[1] == c.name)
+				channel = c;
+		});
+
+		return channel.messages || generateError(404, "Channel Does Not Exist");
+	},
 	"channels/*/send": (p, e) => {},
 	"channels/delete": (p, e) => {},
 	"channels/create": (p, e) => {},

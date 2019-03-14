@@ -1,25 +1,37 @@
 const http = require("http");
+const qs = require("querystring");
 const util = require("./src/lib/util");
 const config = require("./config.json");
 
 let server = http.createServer((request, response) => {
-	let address =
-		request.rawHeaders.includes("DNT") ?
-			"anon" : request.socket.address().address;
+	let data = "";
 
-	let timestamp = time();
+	request.on("data", (chunk) => {
+		data += chunk;
 
-	console.log(`${timestamp} | request from ${address}`);
-	console.log(`${" ".repeat(timestamp.length)}   for resource ${request.url}`)
+		if (data > 1e6)
+			request.destroy("Too Much Information.");
+	});
 
-	let path = request.url.split("/").filter(str => str.length != 0);
-
-	util.getPage(path, request).then((data) => {
-		response.writeHead(data.code, { "Content-Type": data.type, "Connection": "close" });
-		response.end(data.content);
-
-		console.log(`${time()} | responed with a ${data.code}`);
-	}).catch((e) => response.end(e));
+	request.on("end", () => {
+		let address =
+			request.rawHeaders.includes("DNT") ?
+				"anon" : request.socket.address().address;
+	
+		let timestamp = time();
+	
+		console.log(`${timestamp} | request from ${address}`);
+		console.log(`${" ".repeat(timestamp.length)}   for resource ${request.url}`)
+	
+		let path = request.url.split("/").filter(str => str.length != 0);
+	
+		util.getPage(path, request).then((data) => {
+			response.writeHead(data.code, { "Content-Type": data.type, "Connection": "close" });
+			response.end(data.content);
+	
+			console.log(`${time()} | responed with a ${data.code}`);
+		}).catch((e) => response.end(e));
+	});
 });
 
 server.on("listening", () => {
