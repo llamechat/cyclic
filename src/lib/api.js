@@ -86,7 +86,6 @@ class Account {
 	 * @memberof Account
 	 */
 	send(channel, message, options = {}) {
-		/** @type {Channel} */
 		let x;
 
 		this.channels.forEach((c) => {
@@ -101,7 +100,7 @@ class Account {
 		if (x) {
 			x.messages.push(new Message(message, this, options));
 		} else {
-			throw new Error("404 Invalid Channel");
+			throw "404 Invalid Channel";
 		}
 	}
 }
@@ -154,7 +153,11 @@ let endpoints = {
 
 		if (account) {
 			if (account.password == e.post.password) {
-				account.send(p[1], e.post.message);
+				try {
+					account.send(p[1], e.post.message);
+				} catch (e) {
+					return generateError(400, e);
+				}
 			} else {
 				return generateError(401, "Invalid Account Password");
 			}
