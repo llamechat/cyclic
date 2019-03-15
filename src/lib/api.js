@@ -141,7 +141,16 @@ let endpoints = {
 				channel = c;
 		});
 
-		return channel.messages || generateError(404, "Channel Does Not Exist");
+		if (channel) {
+			return {
+				raw: channel.messages,
+				html: channel.messages.map(m => {
+					return m.content + "<br>";
+				})
+			}
+		} else {
+			return generateError(404, "Channel Does Not Exist");
+		}
 	},
 	"channels/*/send": (p, e) => {
 		let account;

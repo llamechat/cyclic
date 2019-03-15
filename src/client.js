@@ -20,7 +20,7 @@ sendButton.addEventListener("click", () => {
 	let c = () => setTimeout(getMessages, 2000);
 
 	get(`/api/channels/${channelField.value}/read/`).then((data) => {
-		display.innerText = JSON.stringify(JSON.parse(data), undefined, "\t");
+		display.innerHTML = JSON.parse(data).html;
 
 		c();
 	}).catch((e) => {
