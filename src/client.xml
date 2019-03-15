@@ -9,9 +9,9 @@
 	<title>client | llamechat cyclic server</title>
 </head>
 <body>
-	<label>channel  <input placeholder="x" id="channel"></label>
-	<label>username <input placeholder="x" id="username"></label>
-	<label>password <input placeholder="x" id="password"></label>
+	<label>channel  <input value="testchannel" placeholder="channel" id="channel"></label>
+	<label>username <input placeholder="username" id="username"></label>
+	<label>password <input placeholder="password" id="password"></label>
 	<textarea placeholder="message" id="message"></textarea>
 	<label><input type="button" value="send" id="send"></label>
 

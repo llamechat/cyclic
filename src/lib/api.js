@@ -108,7 +108,7 @@ class Account {
 
 const admin = new Account(config.account.username, config.account.password);
 
-let testAccount = new Account("testaccount", "despacito")
+let testAccount = new Account("testaccount", "despacito");
 let testChannel = new Channel("testchannel", testAccount);
 
 testChannel.options.public = true;
@@ -153,7 +153,7 @@ let endpoints = {
 		});
 
 		if (account) {
-			if (account.password == e.post.passsord) {
+			if (account.password == e.post.password) {
 				account.send(p[1], e.post.message);
 			} else {
 				return generateError(401, "Invalid Account Password");
