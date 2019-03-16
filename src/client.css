@@ -3,6 +3,7 @@ html, body {
 	padding: 0;
 	background: #161616;
 	color: #ddd;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 input, textarea {
@@ -10,8 +11,23 @@ input, textarea {
 	color: #ddd;
 	border: none;
 	outline: none;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 label {
 	display: block;
+}
+
+.message {
+	margin: 0.2em 1em;
+}
+
+.message .username {
+	margin-right: 0.5em;
+	display: inline-block;
+	font-weight: bold;
+}
+
+.message .content {
+	display: inline-block;
 }

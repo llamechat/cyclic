@@ -145,8 +145,15 @@ let endpoints = {
 			return {
 				raw: channel.messages,
 				html: channel.messages.map(m => {
-					return m.content + "<br>";
-				})
+					let tag = "";
+					
+					tag += `<div class="message">`;
+						tag += `<div class="username">${m.sender}</div>`;
+						tag += `<div class="content">${m.content}</div>`;
+					tag += `</div>`;
+
+					return tag;
+				}).join("")
 			}
 		} else {
 			return generateError(404, "Channel Does Not Exist");
