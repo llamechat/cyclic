@@ -156,12 +156,7 @@ let endpoints = {
 		}
 	},
 	"channels/*/join": (p, e) => {
-		let account;
-
-		data.accounts.forEach((a) => {
-			if (!account && e.post.username == a.name)
-				account = a;
-		});
+		let account = getAccount(e.post.username);
 
 		if (account) {
 			if (account.password == e.post.password) {
@@ -179,12 +174,7 @@ let endpoints = {
 		}
 	},
 	"channels/*/send": (p, e) => {
-		let account;
-
-		data.accounts.forEach((a) => {
-			if (!account && e.post.username == a.name)
-				account = a;
-		});
+		let account = getAccount(e.post.username);
 
 		if (account) {
 			if (account.password == e.post.password) {
@@ -210,12 +200,7 @@ let endpoints = {
 	},
 	"accounts": (p, e) => {},
 	"accounts/authenticate": (p, e) => {
-		let account;
-
-		data.accounts.forEach((a) => {
-			if (!account && e.post.username == a.name)
-				account = a;
-		});
+		let account = getAccount(e.post.username);
 
 		if (account) {
 			if (account.password == e.post.password) {
@@ -228,12 +213,7 @@ let endpoints = {
 		}
 	},
 	"accounts/create": (p, e) => {
-		let account;
-
-		data.accounts.forEach((a) => {
-			if (!account && e.post.username == a.name)
-				account = a;
-		});
+		let account = getAccount(e.post.username);
 
 		if (account) {
 			return generateError(400, "Account Has Already Been Claimed");
@@ -281,6 +261,17 @@ function getChannel(channel) {
 	data.channels.forEach((c) => {
 		if (!x && channel == c.name)
 			x = c;
+	});
+
+	return x;
+}
+
+function getAccount(account) {
+	let x;
+
+	data.accounts.forEach((a) => {
+		if (!x && account == a.name)
+			x = a;
 	});
 
 	return x;
