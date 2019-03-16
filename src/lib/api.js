@@ -107,14 +107,13 @@ class Account {
 
 const admin = new Account(config.account.username, config.account.password);
 
-let testAccount = new Account("testaccount", "despacito");
-let testChannel = new Channel("testchannel", testAccount);
+let testChannel = new Channel("testchannel", admin);
 
 testChannel.options.public = true;
 
-testAccount.send("testchannel", "test");
-testAccount.send("testchannel", "hello world");
-testAccount.send("testchannel", "h");
+admin.send("testchannel", "test");
+admin.send("testchannel", "hello world");
+admin.send("testchannel", "h");
 
 let endpoints = {
 	"channels": (p, e) => {
@@ -171,6 +170,7 @@ let endpoints = {
 			if (account.password == e.post.password) {
 				try {
 					account.send(p[1], e.post.message);
+					return generateSuccess("Message Sent")
 				} catch (e) {
 					return generateError(400, e);
 				}
@@ -213,6 +213,10 @@ function callEndpoint(path, parameters) {
 
 function generateError(code, message) {
 	return { "error": { "code": code, "message": message } }
+}
+
+function generateSuccess(message, code = 200) {
+	return { "success": { "code": code, "message": message } }
 }
 
 module.exports = exports = {

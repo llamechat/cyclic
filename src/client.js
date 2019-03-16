@@ -11,16 +11,26 @@ sendButton.addEventListener("click", () => {
 		password: passwordField.value,
 		message: messageField.value,
 	})
-	.then((data) => {
-		console.log(JSON.parse(data));
+	.then((d) => {
+		let data = JSON.parse(d);
+
+		if (data.error)
+			throw data;
+
+		console.log(data);
 	}).catch(console.error);
 });
 
 (function getMessages() {
 	let c = () => setTimeout(getMessages, 2000);
 
-	get(`/api/channels/${channelField.value}/read/`).then((data) => {
-		display.innerHTML = JSON.parse(data).html;
+	get(`/api/channels/${channelField.value}/read/`).then((d) => {
+		let data = JSON.parse(d);
+
+		if (data.error)
+			throw data;
+
+		display.innerHTML = data.html;
 
 		c();
 	}).catch((e) => {
