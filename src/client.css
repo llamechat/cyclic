@@ -6,6 +6,10 @@ html, body {
 	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+fieldset {
+	display: inline-block;
+}
+
 input, textarea {
 	background: #212121;
 	color: #ddd;

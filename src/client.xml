@@ -9,12 +9,23 @@
 	<title>client | llamechat cyclic server</title>
 </head>
 <body>
-	<label>channel  <input value="testchannel" placeholder="channel" id="channel"></label>
-	<label>username <input placeholder="username" id="username"></label>
-	<label>password <input placeholder="password" id="password"></label>
-	<textarea placeholder="message" id="message"></textarea>
-	<label><input type="button" value="send" id="send"></label>
+	<fieldset id="login-panel">
+		<legend>Login Panel</legend>
 
-	<div id="display"></div>
+		<label>username <input placeholder="username" id="username"></label>
+		<label>password <input placeholder="password" id="password"></label>
+		<label><input type="button" value="login" id="login"></label>
+	</fieldset>
+
+	<fieldset id="channel-view">
+		<legend>Channel View</legend>
+
+		<label><input type="button" value="logout" id="logout"></label>
+		<label>channel  <input value="testchannel" placeholder="channel" id="channel"></label>
+		<textarea placeholder="message" id="message"></textarea>
+		<label><input type="button" value="send" id="send"></label>
+
+		<div id="display"></div>
+	</fieldset>
 </body>
 </html>

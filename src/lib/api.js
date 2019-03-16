@@ -93,7 +93,7 @@ class Account {
 				data.channels.forEach((c) => {
 					if (c.name == channel)
 						x = c;
-				})
+				});
 			}
 		});
 
