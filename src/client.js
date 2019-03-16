@@ -10,15 +10,21 @@ let messageField = document.getElementById("message");
 let sendButton = document.getElementById("send");
 let display = document.getElementById("display");
 
-usernameField.value = "";
-passwordField.value = "";
-channelField.value = "";
-messageField.value = "";
-
 let account;
 
-if (localStorage.account) {
-	account = JSON.parse(localStorage.account);
+{ // init controls
+	usernameField.value = "";
+	passwordField.value = "";
+	channelField.value = "";
+	messageField.value = "";
+}
+
+{ // login
+	if (localStorage.account) {
+		account = JSON.parse(localStorage.account);
+	}
+	
+	updatePanels();
 }
 
 loginButton.addEventListener("click", () => {
@@ -60,7 +66,7 @@ sendButton.addEventListener("click", () => {
 (function getMessages() {
 	let c = () => setTimeout(getMessages, 2000);
 
-	if (account) get(`/api/channels/${channelField.value}/read/`).then((d) => {
+	if (account && channelField.value.length != 0) get(`/api/channels/${channelField.value}/read/`).then((d) => {
 		let data = JSON.parse(d);
 
 		if (data.error)

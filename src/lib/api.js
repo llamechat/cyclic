@@ -122,16 +122,6 @@ let endpoints = {
 
 		return names;
 	},
-	"channels/*": (p, e) => {
-		let channel;
-
-		data.channels.forEach((c) => {
-			if (!channel && p[1] == c.name)
-				channel = c;
-		});
-
-		return channel || generateError(404, "Channel Does Not Exist");
-	},
 	"channels/*/read": (p, e) => {
 		let channel;
 
@@ -183,11 +173,38 @@ let endpoints = {
 	},
 	"channels/delete": (p, e) => {},
 	"channels/create": (p, e) => {},
+	"channels/*": (p, e) => {
+		let channel;
+
+		data.channels.forEach((c) => {
+			if (!channel && p[1] == c.name)
+				channel = c;
+		});
+
+		return channel || generateError(404, "Channel Does Not Exist");
+	},
 	"accounts": (p, e) => {},
-	"accounts/*": (p, e) => {},
-	"accounts/authenticate": (p, e) => {},
+	"accounts/authenticate": (p, e) => {
+		let account;
+
+		data.accounts.forEach((a) => {
+			if (!account && e.post.username == a.name)
+				account = a;
+		});
+
+		if (account) {
+			if (account.password == e.post.password) {
+				return generateSuccess("Valid");
+			} else {
+				return generateError(401, "Invalid Account Password");
+			}
+		} else {
+			return generateError(404, "Account Does Not Exist");
+		}
+	},
 	"accounts/delete": (p, e) => {},
 	"accounts/create": (p, e) => {},
+	"accounts/*": (p, e) => {},
 }
 
 function getEndpoints() {
