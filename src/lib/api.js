@@ -171,8 +171,8 @@ let endpoints = {
 			return generateError(404, "Account Does Not Exist");
 		}
 	},
-	"channels/delete": (p, e) => {},
 	"channels/create": (p, e) => {},
+	"channels/delete": (p, e) => {},
 	"channels/*": (p, e) => {
 		let channel;
 
@@ -202,8 +202,30 @@ let endpoints = {
 			return generateError(404, "Account Does Not Exist");
 		}
 	},
+	"accounts/create": (p, e) => {
+		let account;
+
+		data.accounts.forEach((a) => {
+			if (!account && e.post.username == a.name)
+				account = a;
+		});
+
+		if (account) {
+			return generateError(400, "Account Has Already Been Claimed");
+		} else {
+			if (!e.post.username || !e.post.password) {
+				return generateError(400, "No Username or Password Provided");
+			} else {
+				if (e.post.username.length != 0 && e.post.password.length != 0) {
+					new Account(e.post.username, e.post.password);
+					return generateSuccess("Account Created");
+				} else {
+					return generateError(400, "Invalid Username or Password Provided");
+				}
+			}
+		}
+	},
 	"accounts/delete": (p, e) => {},
-	"accounts/create": (p, e) => {},
 	"accounts/*": (p, e) => {},
 }
 

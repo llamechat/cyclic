@@ -1,7 +1,7 @@
 let registerPanel = document.getElementById("register-panel");
 let registerUsernameField = document.getElementById("register-username");
 let registerPasswordField = document.getElementById("register-password");
-let registerButton = document.getElementById("login");
+let registerButton = document.getElementById("register");
 
 let loginPanel = document.getElementById("login-panel");
 let loginUsernameField = document.getElementById("login-username");
