@@ -8,12 +8,18 @@ let loginUsernameField = document.getElementById("login-username");
 let loginPasswordField = document.getElementById("login-password");
 let loginButton = document.getElementById("login");
 
+let joinPanel = document.getElementById("channel-join");
+let joinField = document.getElementById("join-channel");
+let joinButton = document.getElementById("join");
+
 let channelPanel = document.getElementById("channel-view");
 let logoutButton = document.getElementById("logout");
 let channelField = document.getElementById("channel");
 let messageField = document.getElementById("message");
 let sendButton = document.getElementById("send");
 let display = document.getElementById("display");
+
+let cache = "";
 
 let account;
 
@@ -77,6 +83,20 @@ logoutButton.addEventListener("click", () => {
 	updatePanels();
 });
 
+joinButton.addEventListener("click", () => {
+	post(`/api/channels/${channelField.value}/join/`, {
+		username: account.username,
+		password: account.password,
+	}).then((d) => {
+		let data = JSON.parse(d);
+
+		if (data.error)
+			throw data;
+
+		console.log(data);
+	}).catch(console.error);
+});
+
 sendButton.addEventListener("click", () => {
 	post(`/api/channels/${channelField.value}/send/`, {
 		username: account.username,
@@ -87,6 +107,17 @@ sendButton.addEventListener("click", () => {
 
 		if (data.error)
 			throw data;
+
+		{ // cache messages
+			let tag = "";
+					
+			tag += `<div class="message">`;
+				tag += `<div class="username">${account.username}</div>`;
+				tag += `<div class="content">${messageField.value}</div>`;
+			tag += `</div>`;
+	
+			cache = display.innerHTML = cache + tag;
+		}
 
 		console.log(data);
 	}).catch(console.error);
@@ -101,7 +132,7 @@ sendButton.addEventListener("click", () => {
 		if (data.error)
 			throw data;
 
-		display.innerHTML = data.html;
+		cache = display.innerHTML = data.html;
 	}).catch((e) => {
 		console.error(e);
 	});
@@ -113,10 +144,12 @@ function updatePanels() {
 	if (account) {
 		registerPanel.classList.add("hidden");
 		loginPanel.classList.add("hidden");
+		joinPanel.classList.remove("hidden");
 		channelPanel.classList.remove("hidden");
 	} else {
 		registerPanel.classList.remove("hidden");
 		loginPanel.classList.remove("hidden");
+		joinPanel.classList.add("hidden");
 		channelPanel.classList.add("hidden");
 	}
 }

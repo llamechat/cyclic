@@ -46,7 +46,7 @@ class Channel {
 		}
 
 		data.channels.push(this);
-		owner.joinChannel(this);
+		owner.joinChannel(name);
 	}
 }
 
@@ -70,22 +70,7 @@ class Account {
 		data.accounts.push(this);
 	}
 
-	/**
-	 * @param {Channel} channel
-	 * @memberof Account
-	 */
-	joinChannel(channel) {
-		this.channels.push(channel.name);
-		channel.members.push(this.name);
-	}
-
-	/**
-	 * @param {string} channel
-	 * @param {string} message
-	 * @param {object} [options={}]
-	 * @memberof Account
-	 */
-	send(channel, message, options = {}) {
+	isMemberOf(channel) {
 		let x;
 
 		this.channels.forEach((c) => {
@@ -97,8 +82,35 @@ class Account {
 			}
 		});
 
-		if (x) {
-			x.messages.push(new Message(message, this, options));
+		return x;
+	}
+
+	/**
+	 * @param {string} channel
+	 * @memberof Account
+	 */
+	joinChannel(channel) {
+		let c = getChannel(channel);
+
+		if (c) {
+			this.channels.push(c.name);
+			c.members.push(this.name);
+		} else {
+			throw "404 Invalid Channel";
+		}
+	}
+
+	/**
+	 * @param {string} channel
+	 * @param {string} message
+	 * @param {object} [options={}]
+	 * @memberof Account
+	 */
+	send(channel, message, options = {}) {
+		let c = this.isMemberOf(channel);
+
+		if (c) {
+			c.messages.push(new Message(message, this, options));
 		} else {
 			throw "404 Invalid Channel";
 		}
@@ -123,12 +135,7 @@ let endpoints = {
 		return names;
 	},
 	"channels/*/read": (p, e) => {
-		let channel;
-
-		data.channels.forEach((c) => {
-			if (!channel && p[1] == c.name)
-				channel = c;
-		});
+		let channel = getChannel(p[1]);
 
 		if (channel) {
 			return {
@@ -146,6 +153,29 @@ let endpoints = {
 			}
 		} else {
 			return generateError(404, "Channel Does Not Exist");
+		}
+	},
+	"channels/*/join": (p, e) => {
+		let account;
+
+		data.accounts.forEach((a) => {
+			if (!account && e.post.username == a.name)
+				account = a;
+		});
+
+		if (account) {
+			if (account.password == e.post.password) {
+				try {
+					account.joinChannel(p[1]);
+					return generateSuccess("Channel Joined")
+				} catch (e) {
+					return generateError(400, e);
+				}
+			} else {
+				return generateError(401, "Invalid Account Password");
+			}
+		} else {
+			return generateError(404, "Account Does Not Exist");
 		}
 	},
 	"channels/*/send": (p, e) => {
@@ -174,12 +204,7 @@ let endpoints = {
 	"channels/create": (p, e) => {},
 	"channels/delete": (p, e) => {},
 	"channels/*": (p, e) => {
-		let channel;
-
-		data.channels.forEach((c) => {
-			if (!channel && p[1] == c.name)
-				channel = c;
-		});
+		let channel = getChannel(p[1]);
 
 		return channel || generateError(404, "Channel Does Not Exist");
 	},
@@ -248,6 +273,17 @@ function callEndpoint(path, parameters) {
 	}
 
 	return generateError(404, "Invalid Api Endpoint Provided");
+}
+
+function getChannel(channel) {
+	let x;
+
+	data.channels.forEach((c) => {
+		if (!x && channel == c.name)
+			x = c;
+	});
+
+	return x;
 }
 
 function generateError(code, message) {

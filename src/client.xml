@@ -25,6 +25,13 @@
 		<label><input type="button" value="login" id="login"></label>
 	</fieldset></div>
 
+	<div id="channel-join"><fieldset>
+		<legend>Join Channel</legend>
+
+		<label>channel <input placeholder="channel" id="join-channel"></label>
+		<label><input type="button" value="login" id="join"></label>
+	</fieldset></div>
+
 	<div id="channel-view"><fieldset>
 		<legend>Channel View</legend>
 
