@@ -1,6 +1,11 @@
+let registerPanel = document.getElementById("register-panel");
+let registerUsernameField = document.getElementById("register-username");
+let registerPasswordField = document.getElementById("register-password");
+let registerButton = document.getElementById("login");
+
 let loginPanel = document.getElementById("login-panel");
-let usernameField = document.getElementById("username");
-let passwordField = document.getElementById("password");
+let loginUsernameField = document.getElementById("login-username");
+let loginPasswordField = document.getElementById("login-password");
 let loginButton = document.getElementById("login");
 
 let channelPanel = document.getElementById("channel-view");
@@ -13,8 +18,10 @@ let display = document.getElementById("display");
 let account;
 
 { // init controls
-	usernameField.value = "";
-	passwordField.value = "";
+	registerUsernameField.value = "";
+	registerPasswordField.value = "";
+	loginUsernameField.value = "";
+	loginPasswordField.value = "";
 	channelField.value = "";
 	messageField.value = "";
 }
@@ -23,14 +30,28 @@ let account;
 	if (localStorage.account) {
 		account = JSON.parse(localStorage.account);
 	}
-	
+
 	updatePanels();
 }
 
+registerButton.addEventListener("click", () => {
+	post("/api/accounts/create/", {
+		username: registerUsernameField.value,
+		password: registerPasswordField.value,
+	}).then((d) => {
+		let data = JSON.parse(d);
+
+		if (data.error)
+			throw data;
+
+		alert(`now you can login as "${registerUsernameField.value}"`)
+	}).catch(console.error);
+});
+
 loginButton.addEventListener("click", () => {
 	post("/api/accounts/authenticate/", {
-		username: usernameField.value,
-		password: passwordField.value,
+		username: loginUsernameField.value,
+		password: loginPasswordField.value,
 	}).then((d) => {
 		let data = JSON.parse(d);
 
@@ -38,14 +59,22 @@ loginButton.addEventListener("click", () => {
 			throw data;
 
 		account = {
-			username: usernameField.value,
-			password: passwordField.value,
+			username: loginUsernameField.value,
+			password: loginPasswordField.value,
 		}
 
 		localStorage.account = JSON.stringify(account);
 
 		updatePanels();
 	}).catch(console.error);
+});
+
+logoutButton.addEventListener("click", () => {
+	account = undefined;
+
+	localStorage.removeItem("account");
+
+	updatePanels();
 });
 
 sendButton.addEventListener("click", () => {
@@ -63,7 +92,7 @@ sendButton.addEventListener("click", () => {
 	}).catch(console.error);
 });
 
-(function getMessages() {
+(function getMessages(login) {
 	let c = () => setTimeout(getMessages, 2000);
 
 	if (account && channelField.value.length != 0) get(`/api/channels/${channelField.value}/read/`).then((d) => {
@@ -81,8 +110,15 @@ sendButton.addEventListener("click", () => {
 })();
 
 function updatePanels() {
-	if (account) loginPanel.style.display = "none";
-	if (!account) channelPanel.style.display = "none";
+	if (account) {
+		registerPanel.classList.add("hidden");
+		loginPanel.classList.add("hidden");
+		channelPanel.classList.remove("hidden");
+	} else {
+		registerPanel.classList.remove("hidden");
+		loginPanel.classList.remove("hidden");
+		channelPanel.classList.add("hidden");
+	}
 }
 
 function get(url){

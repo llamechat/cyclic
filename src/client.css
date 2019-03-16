@@ -6,6 +6,10 @@ html, body {
 	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+body > div {
+	margin: 1em 1.4em;
+}
+
 fieldset {
 	display: inline-block;
 }
@@ -21,6 +25,14 @@ input, textarea {
 label {
 	display: block;
 }
+
+/* util */
+
+.hidden {
+	display: none;
+}
+
+/* message display */
 
 .message {
 	margin: 0.2em 1em;
