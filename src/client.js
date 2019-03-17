@@ -28,6 +28,7 @@ let account;
 	registerPasswordField.value = "";
 	loginUsernameField.value = "";
 	loginPasswordField.value = "";
+	joinField.value = "";
 	channelField.value = "";
 	messageField.value = "";
 }

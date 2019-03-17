@@ -1,4 +1,5 @@
 const http = require("http");
+const fs = require("fs");
 const qs = require("querystring");
 const util = require("./src/lib/util");
 const config = require("./config.json");
@@ -44,7 +45,22 @@ server.on("listening", () => {
 	console.log("---");
 });
 
-server.listen(config.port);
+fs.readFile(`${config.database}.json`, (e, data) => {
+	if (e) {
+		fs.writeFile(`${config.database}.json`, "{}", (e) => {
+			if (e)
+				throw e;
+
+			host();
+		});
+	} else {
+		host();
+	}
+});
+
+function host() {
+	server.listen(config.port);
+}
 
 function time() {
 	let d = new Date();

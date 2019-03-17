@@ -1,9 +1,5 @@
+const fs = require("fs");
 const config = require("../../config");
-
-let data = {
-	"channels": [],
-	"accounts": [],
-}
 
 class Message {
 	/**
@@ -117,15 +113,30 @@ class Account {
 	}
 }
 
-const admin = new Account(config.account.username, config.account.password);
+let data = require(`../../${config.database}`);
 
-let testChannel = new Channel("testchannel", admin);
+let admin;
 
-testChannel.options.public = true;
+if (!data.channels || !data.accounts) {
+	data = {
+		channels: [],
+		accounts: [],
+	}
 
-admin.send("testchannel", "test");
-admin.send("testchannel", "hello world");
-admin.send("testchannel", "h");
+	admin = new Account(config.account.username, config.account.password);
+	let testChannel = new Channel("testchannel", admin);
+	
+	testChannel.options.public = true;
+	
+	admin.send("testchannel", "test");
+	admin.send("testchannel", "hello world");
+	admin.send("testchannel", "h");
+
+	save();
+}
+
+if (!admin)
+	admin = getAccount(config.account.username);
 
 let endpoints = {
 	"channels": (p, e) => {
@@ -162,6 +173,7 @@ let endpoints = {
 			if (account.password == e.post.password) {
 				try {
 					account.joinChannel(p[1]);
+					save();
 					return generateSuccess("Channel Joined")
 				} catch (e) {
 					return generateError(400, e);
@@ -180,7 +192,8 @@ let endpoints = {
 			if (account.password == e.post.password) {
 				try {
 					account.send(p[1], e.post.message);
-					return generateSuccess("Message Sent")
+					save();
+					return generateSuccess("Message Sent");
 				} catch (e) {
 					return generateError(400, e);
 				}
@@ -223,6 +236,7 @@ let endpoints = {
 			} else {
 				if (e.post.username.length != 0 && e.post.password.length != 0) {
 					new Account(e.post.username, e.post.password);
+					save();
 					return generateSuccess("Account Created");
 				} else {
 					return generateError(400, "Invalid Username or Password Provided");
@@ -275,6 +289,13 @@ function getAccount(account) {
 	});
 
 	return x;
+}
+
+function save() {
+	fs.writeFile(`${config.database}.json`, JSON.stringify(data), (e) => {
+		if (e)
+			throw e;
+	});
 }
 
 function generateError(code, message) {

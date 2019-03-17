@@ -3,5 +3,6 @@
 		"username": "admin",
 		"password": "admin"
 	},
+	"database": "db",
 	"port": 9000
 }
